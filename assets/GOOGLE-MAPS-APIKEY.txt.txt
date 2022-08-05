@@ -1,0 +1,5 @@
+AIzaSyBvt1zIPZV9tzwWTHfC2YXj-nwFUL91iiI
+
+api key yg digunakan = AIzaSyCRy4qvHjufWvTU40yO0F_UlbRNLTQWwSk
+
+keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
