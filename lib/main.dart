@@ -118,7 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: BitmapDescriptor.defaultMarkerWithHue(
                 BitmapDescriptor.hueGreen),
             position: pos);
-        _destination == null;
+        //reset destination
+        _destination = null;
       });
     } else {
       // origin in already set
