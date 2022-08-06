@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
+import '../utils/utils_color.dart';
 import 'homescreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,7 +14,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Timer(
         Duration(seconds: 5),
@@ -25,14 +25,20 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          hexStringToColor("6C3483"),
+          hexStringToColor("E8DAEF"),
+          hexStringToColor("FEF5E7")
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
               "Ingin Healing",
-              style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+              style: GoogleFonts.pacifico(
+                  fontStyle: FontStyle.normal, fontSize: 40),
             ),
             SizedBox(height: 30),
             Text(
@@ -41,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: TextStyle(
                   color: Colors.blueGrey,
                   fontSize: 15,
-                  fontWeight: FontWeight.w100),
+                  fontWeight: FontWeight.w400),
             ),
           ],
         ),
