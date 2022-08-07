@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inginhealing/service/location_search_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:inginhealing/widgets/button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,10 +20,22 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _originController = TextEditingController();
   TextEditingController _destinationController = TextEditingController();
+  TextEditingController _latsOrigin = TextEditingController();
+  TextEditingController _lngsOrigin = TextEditingController();
+  TextEditingController _latsDestination = TextEditingController();
+  TextEditingController _lngsDestination = TextEditingController();
   Set<Marker> _markers = Set<Marker>();
   Set<Polygon> _polygons = Set<Polygon>();
   Set<Polyline> _polylines = Set<Polyline>();
   List<LatLng> polygonLatLngs = <LatLng>[];
+  bool showSaveButton = false;
+  double latOrigin = 0.0;
+  double lngOrigin = 0.0;
+  double latDestination = 0.0;
+  double lngDestination = 0.0;
+  //firebase
+  TextEditingController _judul = TextEditingController();
+  TextEditingController _detail = TextEditingController();
 
   int _polygonIdCounter = 1;
   int _polyLineIdCounter = 1;
@@ -67,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
       strokeWidth: 5,
       fillColor: Colors.transparent);
-
   @override
   void initState() {
     // TODO: implement initState
@@ -113,23 +128,177 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          'InginHealing',
+          style:
+              GoogleFonts.pacifico(fontStyle: FontStyle.normal, fontSize: 20),
+        ),
+        actions: <Widget>[
+          showSaveButton
+              ? TextButton(
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            decoration: new BoxDecoration(
+                                borderRadius: new BorderRadius.only(
+                                    topLeft: const Radius.circular(25.0),
+                                    topRight: const Radius.circular(25.0))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(height: 60),
+                                  Text(
+                                    'Catat rencana healing',
+                                    style: TextStyle(
+                                        fontSize: 30, color: Colors.purple),
+                                  ),
+                                  SizedBox(height: 20),
+                                  TextFormField(
+                                    controller: _judul,
+                                    style: TextStyle(color: Colors.black),
+                                    obscureText: false,
+                                    decoration: const InputDecoration(
+                                      prefixIcon: Icon(Icons.title),
+                                      labelText: 'Judul Healing',
+                                      fillColor: Colors.grey,
+                                      focusColor: Colors.grey,
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  TextFormField(
+                                    controller: _detail,
+                                    style: TextStyle(color: Colors.black),
+                                    obscureText: false,
+                                    decoration: const InputDecoration(
+                                      prefixIcon: Icon(Icons.local_activity),
+                                      labelText: 'Mau ngapain aja ?',
+                                      fillColor: Colors.grey,
+                                      focusColor: Colors.grey,
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  TextFormField(
+                                    enabled: false,
+                                    controller: _originController,
+                                    style:
+                                        TextStyle(color: Colors.grey.shade400),
+                                    obscureText: false,
+                                    decoration: const InputDecoration(
+                                      prefixIcon: Icon(Icons.flight_takeoff),
+                                      labelText: 'dari mana?',
+                                      fillColor: Colors.grey,
+                                      focusColor: Colors.grey,
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  TextFormField(
+                                    enabled: false,
+                                    controller: _destinationController,
+                                    style:
+                                        TextStyle(color: Colors.grey.shade400),
+                                    obscureText: false,
+                                    decoration: const InputDecoration(
+                                      prefixIcon: Icon(Icons.flight_land),
+                                      labelText: 'ke mana?',
+                                      fillColor: Colors.grey,
+                                      focusColor: Colors.grey,
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  TextFormField(
+                                    enabled: false,
+                                    controller: _latsOrigin,
+                                    style:
+                                        TextStyle(color: Colors.grey.shade400),
+                                    obscureText: false,
+                                    decoration: const InputDecoration(
+                                      prefixIcon: Icon(Icons.flight_land),
+                                      labelText: 'ke mana?',
+                                      fillColor: Colors.grey,
+                                      focusColor: Colors.grey,
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  SaveBtn(context, () async {
+                                    WidgetsFlutterBinding.ensureInitialized();
+                                    await Firebase.initializeApp();
+                                    FirebaseFirestore.instance
+                                        .collection("inginhealing")
+                                        .add({
+                                      'darimana': _originController.text,
+                                      'detail': _detail.text,
+                                      'judul': _judul.text,
+                                      'kemana': _destinationController.text,
+                                      'origin': GeoPoint(latOrigin, lngOrigin),
+                                      'destination': GeoPoint(
+                                          latDestination, lngDestination),
+                                    }).then((value) {
+                                      print(value.id);
+                                      Navigator.pop(context);
+                                    }).catchError((error) =>
+                                            print("gagal simpan data $error"));
+                                    // addHealingData(
+                                    //     _originController.text,
+                                    //     _detail.text,
+                                    //     _judul.text,
+                                    //     _destinationController.text,
+                                    //     GeoPoint(latOrigin, lngOrigin),
+                                    //     GeoPoint(
+                                    //         latDestination, lngDestination));
+                                  }),
+                                  cancelBtn(context, () {
+                                    Navigator.pop(context);
+                                  })
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  child: Text(
+                    'Simpan',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+              : Container(),
+        ],
+      ),
       body: Column(
         children: [
           Row(
             children: [
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextField(
                       controller: _originController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(hintText: 'Dari mana ?'),
+                      decoration: InputDecoration(
+                        hintText: 'Dari mana ?',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     TextField(
                       controller: _destinationController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(hintText: 'Mau kemana ?'),
+                      decoration: InputDecoration(
+                        hintText: 'Mau kemana ?',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ],
                 ),
@@ -150,19 +319,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     _setPolyline(directions['polyline_decoded']);
                   },
-//                   onPressed: () async {
-//                     // LocationSearchService().getDirections(
-//                     //     _originController.text, _destinationController.text);
-//                      var directions = await LocationSearchService().getDirections(
-//                     _originController.text,
-//                     _destinationController.text,
-//                   );
-//                         _goToPlace(directions['start_location']['lat'], directions['start_location']['lng'])
-//  _setPolyline(directions['polyline_decoded']);
-//                     // var place = await LocationSearchService()
-//                     //     .getPlace(_searchController.text);
-//                     // _goToPlace(place);
-//                   },
                   icon: Icon(Icons.search))
             ],
           ),
@@ -199,9 +355,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic> boundsNe,
     Map<String, dynamic> boundsSw,
   ) async {
-    // final double lat = place['geometry']['location']['lat'];
-    // final double lng = place['geometry']['location']['lng'];
-
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -217,6 +370,37 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           25),
     );
+    setState(() {
+      showSaveButton = true;
+      latOrigin = boundsSw['lat'];
+      lngOrigin = boundsSw['lng'];
+      latDestination = boundsNe['lat'];
+      lngDestination = boundsNe['lng'];
+      // titikAwal = boundsNe as List;
+      // titikAkhir = boundsSw as List;
+    });
     _setMarker(LatLng(lat, lng));
+    print('Northeast');
+    print(boundsNe['lat']);
+    print('Southwest');
+    print(boundsSw['lat']);
   }
+
+  // Future addHealingData(String darimana, String detail, String judul,
+  //     String kemana, GeoPoint destinatin, GeoPoint origin) async {
+  //   await Firebase.initializeApp();
+  //   FirebaseFirestore.instance
+  //       .collection('datahealing')
+  //       .add({
+  //         'darimana': darimana,
+  //         'detail': detail,
+  //         'judul': judul,
+  //         'kemana': kemana,
+  //         'origin': GeoPoint(latOrigin, lngOrigin),
+  //         'destination': GeoPoint(latDestination, lngDestination),
+  //         // 'origin': GeoPoint();
+  //       })
+  //       .then((value) => {Navigator.pop(context)})
+  //       .catchError((error) => print('gagal simpan data $error'));
+  // }
 }

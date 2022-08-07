@@ -41,6 +41,15 @@ class _SplashScreenState extends State<SplashScreen> {
               style: GoogleFonts.pacifico(
                   fontStyle: FontStyle.normal, fontSize: 40),
             ),
+            SizedBox(height: 10),
+            Text(
+              "catat rencana healing mu",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400),
+            ),
             SizedBox(height: 30),
             Text(
               "by Yayang Taopik",

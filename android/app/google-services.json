@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "860190564446",
+    "project_id": "inginhealing",
+    "storage_bucket": "inginhealing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860190564446:android:df4e8447bed9d2aed0d4cf",
+        "android_client_info": {
+          "package_name": "com.example.inginhealing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860190564446-nuvfore5kdcc8hj9p4679sgp4c311jc5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGypEyDG6eW0pW_3e3KX0LZ2y9ka5otd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860190564446-nuvfore5kdcc8hj9p4679sgp4c311jc5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
