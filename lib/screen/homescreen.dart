@@ -250,11 +250,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                               TextButton(
                                                   onPressed: () {
                                                     Navigator.pop(context);
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                HomeScreen()));
                                                   },
                                                   child: Text('OKE'))
                                             ],
