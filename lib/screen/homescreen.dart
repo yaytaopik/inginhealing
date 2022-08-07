@@ -237,11 +237,55 @@ class _HomeScreenState extends State<HomeScreen> {
                                       'origin': GeoPoint(latOrigin, lngOrigin),
                                       'destination': GeoPoint(
                                           latDestination, lngDestination),
-                                    }).then((value) {
-                                      print(value.id);
-                                      Navigator.pop(context);
-                                    }).catchError((error) =>
-                                            print("gagal simpan data $error"));
+                                    });
+                                    Navigator.pop(context);
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Berhasil'),
+                                            content:
+                                                Text('Berhasil simpan data !'),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HomeScreen()));
+                                                  },
+                                                  child: Text('OKE'))
+                                            ],
+                                          );
+                                        });
+                                    // .then((value) {
+                                    //   print(value.id);
+                                    //   showDialog(
+                                    //       context: context,
+                                    //       builder: (BuildContext context) {
+                                    //         return AlertDialog(
+                                    //           title: Text('Berhasil'),
+                                    //           content: Text(
+                                    //               'Berhasil simpan data !'),
+                                    //           actions: [
+                                    //             TextButton(
+                                    //                 onPressed: () {
+                                    //                   Navigator.pop(context);
+                                    //                   Navigator.push(
+                                    //                       context,
+                                    //                       MaterialPageRoute(
+                                    //                           builder: (context) =>
+                                    //                               HomeScreen()));
+                                    //                 },
+                                    //                 child: Text('OKE'))
+                                    //           ],
+                                    //         );
+                                    //       });
+                                    //   Navigator.pop(context);
+                                    // }).catchError((error) =>
+                                    //         print("gagal simpan data $error"));
                                   }),
                                   cancelBtn(context, () {
                                     Navigator.pop(context);
@@ -292,22 +336,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               IconButton(
-                  onPressed: () async {
-                    var directions =
-                        await LocationSearchService().getDirections(
-                      _originController.text,
-                      _destinationController.text,
-                    );
-                    _goToPlace(
-                      directions['start_location']['lat'],
-                      directions['start_location']['lng'],
-                      directions['bounds_ne'],
-                      directions['bounds_sw'],
-                    );
+                onPressed: () async {
+                  var directions = await LocationSearchService().getDirections(
+                    _originController.text,
+                    _destinationController.text,
+                  );
+                  _goToPlace(
+                    directions['start_location']['lat'],
+                    directions['start_location']['lng'],
+                    directions['bounds_ne'],
+                    directions['bounds_sw'],
+                  );
 
-                    _setPolyline(directions['polyline_decoded']);
-                  },
-                  icon: Icon(Icons.search))
+                  _setPolyline(directions['polyline_decoded']);
+                },
+                icon: Icon(Icons.search),
+                tooltip: 'Cari lokasi',
+              )
             ],
           ),
           Expanded(
@@ -364,8 +409,6 @@ class _HomeScreenState extends State<HomeScreen> {
       lngOrigin = boundsSw['lng'];
       latDestination = boundsNe['lat'];
       lngDestination = boundsNe['lng'];
-      // titikAwal = boundsNe as List;
-      // titikAkhir = boundsSw as List;
     });
     _setMarker(LatLng(lat, lng));
     print('Northeast');
@@ -373,22 +416,4 @@ class _HomeScreenState extends State<HomeScreen> {
     print('Southwest');
     print(boundsSw['lat']);
   }
-
-  // Future addHealingData(String darimana, String detail, String judul,
-  //     String kemana, GeoPoint destinatin, GeoPoint origin) async {
-  //   await Firebase.initializeApp();
-  //   FirebaseFirestore.instance
-  //       .collection('datahealing')
-  //       .add({
-  //         'darimana': darimana,
-  //         'detail': detail,
-  //         'judul': judul,
-  //         'kemana': kemana,
-  //         'origin': GeoPoint(latOrigin, lngOrigin),
-  //         'destination': GeoPoint(latDestination, lngDestination),
-  //         // 'origin': GeoPoint();
-  //       })
-  //       .then((value) => {Navigator.pop(context)})
-  //       .catchError((error) => print('gagal simpan data $error'));
-  // }
 }
