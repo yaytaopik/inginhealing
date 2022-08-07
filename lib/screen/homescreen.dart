@@ -7,6 +7,7 @@ import 'package:inginhealing/service/location_search_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:inginhealing/widgets/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'view_data.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -135,6 +136,15 @@ class _HomeScreenState extends State<HomeScreen> {
               GoogleFonts.pacifico(fontStyle: FontStyle.normal, fontSize: 20),
         ),
         actions: <Widget>[
+          TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ViewData()));
+              },
+              child: Text(
+                'Lihat Data',
+                style: TextStyle(color: Colors.white),
+              )),
           showSaveButton
               ? TextButton(
                   onPressed: () {
@@ -232,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     WidgetsFlutterBinding.ensureInitialized();
                                     await Firebase.initializeApp();
                                     FirebaseFirestore.instance
-                                        .collection("inginhealing")
+                                        .collection("datahealing")
                                         .add({
                                       'darimana': _originController.text,
                                       'detail': _detail.text,
@@ -246,14 +256,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Navigator.pop(context);
                                     }).catchError((error) =>
                                             print("gagal simpan data $error"));
-                                    // addHealingData(
-                                    //     _originController.text,
-                                    //     _detail.text,
-                                    //     _judul.text,
-                                    //     _destinationController.text,
-                                    //     GeoPoint(latOrigin, lngOrigin),
-                                    //     GeoPoint(
-                                    //         latDestination, lngDestination));
                                   }),
                                   cancelBtn(context, () {
                                     Navigator.pop(context);
