@@ -289,8 +289,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.20-nullsafety.5"
+  google_maps_widget:
+    dependency: "direct main"
+    description:
+      name: google_maps_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"

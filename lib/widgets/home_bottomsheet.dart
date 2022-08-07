@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inginhealing/service/service_location.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeBottomSheet extends StatefulWidget {
   const HomeBottomSheet({Key? key}) : super(key: key);
@@ -33,6 +34,14 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
           SizedBox(height: 20),
           Column(
             children: <Widget>[
+              SizedBox(
+                height: 80,
+                child: Lottie.asset('assets/animation/92714-location.json',
+                    repeat: true, reverse: false, animate: true),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Text('Lokasi saat ini:'),
               SizedBox(height: 10),
               Container(
@@ -53,7 +62,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                 }),
               ),
               SizedBox(
-                height: 100,
+                height: 300,
               )
             ],
           ),
