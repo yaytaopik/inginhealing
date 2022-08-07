@@ -224,20 +224,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 20),
-                                  TextFormField(
-                                    enabled: false,
-                                    controller: _latsOrigin,
-                                    style:
-                                        TextStyle(color: Colors.grey.shade400),
-                                    obscureText: false,
-                                    decoration: const InputDecoration(
-                                      prefixIcon: Icon(Icons.flight_land),
-                                      labelText: 'ke mana?',
-                                      fillColor: Colors.grey,
-                                      focusColor: Colors.grey,
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
                                   SaveBtn(context, () async {
                                     WidgetsFlutterBinding.ensureInitialized();
                                     await Firebase.initializeApp();

@@ -69,7 +69,30 @@ class _ViewDataState extends State<ViewData> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 Text(
-                                  'Tujuan: ${data.docs[index]['kemana']}',
+                                  '${data.docs[index]['darimana']}',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                Text(' Ke '),
+                                Text(
+                                  '${data.docs[index]['kemana']}',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  'LatlongOrigin: ${data.docs[index]['origin']}',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  'LatLongDestination: ${data.docs[index]['destination']}',
                                   style: TextStyle(fontSize: 15),
                                 ),
                               ],
